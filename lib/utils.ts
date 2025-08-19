@@ -34,3 +34,22 @@ export function tokenHasAdmin(token: string | null): boolean {
   const roles = Array.isArray(d.roles) ? d.roles : typeof d.roles === 'string' ? [d.roles] : []
   return roles.some(r => r.toUpperCase().includes('ADMIN'))
 }
+
+export function getWelcomeName(userEmail: string | null | undefined): string {
+  if (typeof window !== 'undefined') {
+    const cached = localStorage.getItem('asiou_user_name')
+    if (cached && cached.trim().length > 0) return cached
+    const token = localStorage.getItem('asiou_jwt')
+    const d = decodeJwt(token)
+    if (d) {
+      const candidate = (d.firstName && d.lastName) ? `${d.firstName} ${d.lastName}` : (d.given_name && d.family_name) ? `${d.given_name} ${d.family_name}` : (d.name as string)
+      if (candidate && candidate.trim().length > 0) {
+        localStorage.setItem('asiou_user_name', candidate)
+        return candidate
+      }
+    }
+  }
+  const email = (userEmail || '').toLowerCase()
+  if (email === 'admin@asiou.az') return 'Elviz Ismayilov'
+  return ''
+}

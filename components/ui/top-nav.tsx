@@ -1,6 +1,7 @@
 "use client"
 
 import useIsAdmin from "@/hooks/useIsAdmin"
+import { getWelcomeName } from "@/lib/utils"
 
 type View = "dashboard" | "paper" | "cameraReady" | "contribution" | "admin" | "password" | "submissions" | "profile"
 
@@ -27,7 +28,7 @@ export default function TopNav({ user, current, onNavigate, onLogout }: Props) {
   return (
     <nav className="bg-gradient-to-r from-green-500 to-green-600 text-white">
       <div className="px-4 py-2 text-center bg-green-400">
-        You are Welcome: <strong>{user || "User"}!</strong>
+        You are Welcome: <strong>{getWelcomeName(user) || "User"}!</strong>
       </div>
       <div className="px-4 py-2 flex flex-wrap justify-center space-x-4 text-sm">
         {item("My Home", "dashboard")}

@@ -16,8 +16,17 @@ export default function LoginForm({ onLogin, onGoRegister }: Props) {
     setError(null)
     setLoading(true)
     try {
-      await login(email, password) // saves JWT in localStorage
+      const res = await login(email, password) // saves JWT in localStorage
       localStorage.setItem("asiou_user_email", email)
+      // Try to derive a nice display name and cache it
+      try {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('asiou_jwt') : null
+        if (token) {
+          const payload = JSON.parse(atob(token.split('.')[1]))
+          const candidate = (payload.firstName && payload.lastName) ? `${payload.firstName} ${payload.lastName}` : (payload.given_name && payload.family_name) ? `${payload.given_name} ${payload.family_name}` : (payload.name || '')
+          if (candidate) localStorage.setItem('asiou_user_name', candidate)
+        }
+      } catch {}
       onLogin(email) // switch SPA view instead of router.push
     } catch (err: any) {
       setError(err?.message || "Login failed")

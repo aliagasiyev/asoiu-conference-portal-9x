@@ -29,6 +29,7 @@ export default function RegisterForm({ onRegistered, onBackToLogin }: Props) {
     try {
       await register({ email, password, firstName, lastName })
       localStorage.setItem("asiou_user_email", email)
+      localStorage.setItem("asiou_user_name", `${firstName} ${lastName}`)
       onRegistered(email)
     } catch (err: any) {
       setError(err?.response?.data?.message || err?.message || "Registration failed")
