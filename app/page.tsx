@@ -1,40 +1,31 @@
 "use client"
-
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import LoginForm from "@/components/login-form"
 import Dashboard from "@/components/dashboard"
 import PaperSubmission from "@/components/paper-submission"
 import ContributionForm from "@/components/contribution-form"
 
 export default function ConferenceApp() {
-  const [currentView, setCurrentView] = useState<"login" | "dashboard" | "paper" | "contribution">("login")
-  const [user, setUser] = useState<string>("")
+  const [currentView, setCurrentView] =
+      useState<"login"|"dashboard"|"paper"|"contribution">("login")
+  const [user, setUser] = useState("")
 
-  const handleLogin = (email: string) => {
-    setUser(email)
-    setCurrentView("dashboard")
-  }
+  useEffect(() => {
+    const t = localStorage.getItem("asiou_jwt")
+    const email = localStorage.getItem("asiou_user_email") || ""
+    if (t) { setUser(email); setCurrentView("dashboard") }
+  }, [])
 
-  const handleNavigation = (view: "dashboard" | "paper" | "contribution") => {
-    setCurrentView(view)
-  }
-
-  const handleLogout = () => {
-    setUser("")
-    setCurrentView("login")
-  }
+  const handleLogin = (email: string) => { setUser(email); setCurrentView("dashboard") }
+  const handleNavigate = (v: "dashboard"|"paper"|"contribution") => setCurrentView(v)
+  const handleLogout = () => { localStorage.clear(); setUser(""); setCurrentView("login") }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {currentView === "login" && <LoginForm onLogin={handleLogin} />}
-
-      {currentView === "dashboard" && <Dashboard user={user} onNavigate={handleNavigation} onLogout={handleLogout} />}
-
-      {currentView === "paper" && <PaperSubmission user={user} onNavigate={handleNavigation} onLogout={handleLogout} />}
-
-      {currentView === "contribution" && (
-        <ContributionForm user={user} onNavigate={handleNavigation} onLogout={handleLogout} />
-      )}
-    </div>
+      <>
+        {currentView === "login" && <LoginForm onLogin={handleLogin} />}
+        {currentView === "dashboard" && <Dashboard user={user} onNavigate={handleNavigate} onLogout={handleLogout} />}
+        {currentView === "paper" && <PaperSubmission user={user} onNavigate={handleNavigate} onLogout={handleLogout} />}
+        {currentView === "contribution" && <ContributionForm user={user} onNavigate={handleNavigate} onLogout={handleLogout} />}
+      </>
   )
 }
