@@ -5,6 +5,7 @@ import useAuthGuard from "@/hooks/useAuthGuard"
 import { listMyPapers, withdrawPaper, submitPaper, submitCameraReady } from "@/lib/papers"
 import { listMyContributions } from "@/lib/contributions"
 import { downloadFile } from "@/lib/files"
+import api from "@/lib/http"
 
 interface DashboardProps {
   user: string
@@ -17,6 +18,7 @@ export default function Dashboard({ user, onNavigate, onLogout }: DashboardProps
   const [papers, setPapers] = useState<any[]>([])
   const [contribs, setContribs] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   const load = async () => {
     setLoading(true)
@@ -33,6 +35,15 @@ export default function Dashboard({ user, onNavigate, onLogout }: DashboardProps
 
   useEffect(() => {
     load()
+    // Probe an admin endpoint silently to decide whether to show Admin link
+    ;(async () => {
+      try {
+        await api.get('/api/admin/reference/topics')
+        setIsAdmin(true)
+      } catch {
+        setIsAdmin(false)
+      }
+    })()
   }, [])
 
   const onWithdraw = async (id: number) => {
@@ -65,6 +76,7 @@ export default function Dashboard({ user, onNavigate, onLogout }: DashboardProps
             <button onClick={() => onNavigate("contribution")} className="hover:underline">Submit a Contribution</button>
             <span>My All Submissions</span>
             <span>Change Password</span>
+            {isAdmin && <button onClick={() => onNavigate("admin")} className="hover:underline">Admin</button>}
             <button onClick={onLogout} className="hover:underline">Sign Out</button>
           </div>
         </nav>

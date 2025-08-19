@@ -4,10 +4,11 @@ import LoginForm from "@/components/login-form"
 import Dashboard from "@/components/dashboard"
 import PaperSubmission from "@/components/paper-submission"
 import ContributionForm from "@/components/contribution-form"
+import AdminReference from "@/components/admin-reference"
 
 export default function ConferenceApp() {
   const [currentView, setCurrentView] =
-      useState<"login"|"dashboard"|"paper"|"contribution">("login")
+      useState<"login"|"dashboard"|"paper"|"contribution"|"admin">("login")
   const [user, setUser] = useState("")
 
   useEffect(() => {
@@ -17,7 +18,7 @@ export default function ConferenceApp() {
   }, [])
 
   const handleLogin = (email: string) => { setUser(email); setCurrentView("dashboard") }
-  const handleNavigate = (v: "dashboard"|"paper"|"contribution") => setCurrentView(v)
+  const handleNavigate = (v: "dashboard"|"paper"|"contribution"|"admin") => setCurrentView(v)
   const handleLogout = () => { localStorage.clear(); setUser(""); setCurrentView("login") }
 
   return (
@@ -26,6 +27,7 @@ export default function ConferenceApp() {
         {currentView === "dashboard" && <Dashboard user={user} onNavigate={handleNavigate} onLogout={handleLogout} />}
         {currentView === "paper" && <PaperSubmission user={user} onNavigate={handleNavigate} onLogout={handleLogout} />}
         {currentView === "contribution" && <ContributionForm user={user} onNavigate={handleNavigate} onLogout={handleLogout} />}
+        {currentView === "admin" && <AdminReference onBack={() => setCurrentView("dashboard")} />}
       </>
   )
 }
