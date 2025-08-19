@@ -10,6 +10,8 @@ import {
   adminCreatePaperType,
   adminUpdatePaperType,
   adminDeletePaperType,
+  adminSetTopicActive,
+  adminSetPaperTypeActive,
   type RefItem,
 } from "@/lib/reference-admin"
 
@@ -21,12 +23,14 @@ function CrudList({
   onCreate,
   onUpdate,
   onDelete,
+  onToggle,
 }: {
   title: string
   items: RefItem[]
   onCreate: (name: string) => Promise<void>
   onUpdate: (id: number, name: string) => Promise<void>
   onDelete: (id: number) => Promise<void>
+  onToggle: (id: number, active: boolean, currentName: string) => Promise<void>
 }) {
   const [newName, setNewName] = useState("")
 
@@ -62,8 +66,15 @@ function CrudList({
                 if (v && v !== it.name) await onUpdate(it.id, v)
               }}
             />
+            <label className="flex items-center gap-1 text-sm text-gray-700">
+              <input type="checkbox" checked={it.active ?? true} onChange={async (e) => {
+                await onToggle(it.id, e.target.checked, it.name)
+              }} /> active
+            </label>
             <button
-              className="text-red-700 underline"
+              className={(it.active ?? true) ? "text-gray-400 underline cursor-not-allowed" : "text-red-700 underline"}
+              disabled={it.active ?? true}
+              title={(it.active ?? true) ? "Deactivate first, then delete" : "Delete"}
               onClick={() => onDelete(it.id)}
             >
               Delete
@@ -118,14 +129,40 @@ export default function AdminReference({ onBack }: Props) {
               items={topics}
               onCreate={async (name) => { await adminCreateTopic(name); await load() }}
               onUpdate={async (id, name) => { await adminUpdateTopic(id, name); await load() }}
-              onDelete={async (id) => { await adminDeleteTopic(id); await load() }}
+              onDelete={async (id) => {
+                try { await adminDeleteTopic(id); await load() } catch (e: any) {
+                  const s = e?.response?.status
+                  if (s === 409 || s === 400) {
+                    alert('Cannot delete topic: it is referenced by existing papers. Please remove it from papers or deactivate it in the backend.')
+                  } else {
+                    alert('Failed to delete topic')
+                  }
+                }
+              }}
+              onToggle={async (id, active, currentName) => {
+                await adminSetTopicActive(id, active, currentName)
+                setTopics(prev => prev.map(it => it.id === id ? { ...it, active } : it))
+              }}
             />
             <CrudList
               title="Paper Types"
               items={types}
               onCreate={async (name) => { await adminCreatePaperType(name); await load() }}
               onUpdate={async (id, name) => { await adminUpdatePaperType(id, name); await load() }}
-              onDelete={async (id) => { await adminDeletePaperType(id); await load() }}
+              onDelete={async (id) => {
+                try { await adminDeletePaperType(id); await load() } catch (e: any) {
+                  const s = e?.response?.status
+                  if (s === 409 || s === 400) {
+                    alert('Cannot delete paper type: it is referenced by existing papers. Please change those papers first or deactivate it in the backend.')
+                  } else {
+                    alert('Failed to delete paper type')
+                  }
+                }
+              }}
+              onToggle={async (id, active, currentName) => {
+                await adminSetPaperTypeActive(id, active, currentName)
+                setTypes(prev => prev.map(it => it.id === id ? { ...it, active } : it))
+              }}
             />
           </>
         )}

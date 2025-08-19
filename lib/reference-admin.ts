@@ -1,6 +1,6 @@
 import api from './http'
 
-export type RefItem = { id: number; name: string }
+export type RefItem = { id: number; name: string; active?: boolean }
 
 // Topics
 export async function adminListTopics(): Promise<RefItem[]> {
@@ -13,8 +13,15 @@ export async function adminCreateTopic(name: string): Promise<RefItem> {
   return data
 }
 
-export async function adminUpdateTopic(id: number, name: string): Promise<RefItem> {
-  const { data } = await api.put(`/api/admin/reference/topics/${id}`, { name })
+export async function adminUpdateTopic(id: number, name: string, active?: boolean): Promise<RefItem> {
+  const body: any = { name }
+  if (typeof active === 'boolean') body.active = active
+  const { data } = await api.put(`/api/admin/reference/topics/${id}`, body)
+  return data
+}
+
+export async function adminSetTopicActive(id: number, active: boolean, currentName: string): Promise<RefItem> {
+  const { data } = await api.put(`/api/admin/reference/topics/${id}`, { name: currentName, active })
   return data
 }
 
@@ -33,8 +40,15 @@ export async function adminCreatePaperType(name: string): Promise<RefItem> {
   return data
 }
 
-export async function adminUpdatePaperType(id: number, name: string): Promise<RefItem> {
-  const { data } = await api.put(`/api/admin/reference/paper-types/${id}`, { name })
+export async function adminUpdatePaperType(id: number, name: string, active?: boolean): Promise<RefItem> {
+  const body: any = { name }
+  if (typeof active === 'boolean') body.active = active
+  const { data } = await api.put(`/api/admin/reference/paper-types/${id}`, body)
+  return data
+}
+
+export async function adminSetPaperTypeActive(id: number, active: boolean, currentName: string): Promise<RefItem> {
+  const { data } = await api.put(`/api/admin/reference/paper-types/${id}`, { name: currentName, active })
   return data
 }
 

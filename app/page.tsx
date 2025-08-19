@@ -5,10 +5,11 @@ import Dashboard from "@/components/dashboard"
 import PaperSubmission from "@/components/paper-submission"
 import ContributionForm from "@/components/contribution-form"
 import AdminReference from "@/components/admin-reference"
+import RegisterForm from "@/components/register-form"
 
 export default function ConferenceApp() {
   const [currentView, setCurrentView] =
-      useState<"login"|"dashboard"|"paper"|"contribution"|"admin">("login")
+      useState<"login"|"register"|"dashboard"|"paper"|"contribution"|"admin">("login")
   const [user, setUser] = useState("")
 
   useEffect(() => {
@@ -23,7 +24,8 @@ export default function ConferenceApp() {
 
   return (
       <>
-        {currentView === "login" && <LoginForm onLogin={handleLogin} />}
+        {currentView === "login" && <LoginForm onLogin={handleLogin} onGoRegister={() => setCurrentView("register")} />}
+        {currentView === "register" && <RegisterForm onRegistered={handleLogin} onBackToLogin={() => setCurrentView("login")} />}
         {currentView === "dashboard" && <Dashboard user={user} onNavigate={handleNavigate} onLogout={handleLogout} />}
         {currentView === "paper" && <PaperSubmission user={user} onNavigate={handleNavigate} onLogout={handleLogout} />}
         {currentView === "contribution" && <ContributionForm user={user} onNavigate={handleNavigate} onLogout={handleLogout} />}

@@ -3,9 +3,9 @@
 import { useState } from "react"
 import { login } from "@/lib/auth"
 
-type Props = { onLogin: (email: string) => void }
+type Props = { onLogin: (email: string) => void; onGoRegister?: () => void }
 
-export default function LoginForm({ onLogin }: Props) {
+export default function LoginForm({ onLogin, onGoRegister }: Props) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
@@ -63,6 +63,11 @@ export default function LoginForm({ onLogin }: Props) {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
+          {onGoRegister && (
+            <button type="button" onClick={onGoRegister} className="w-full text-center underline text-sm text-gray-600">
+              Create new account
+            </button>
+          )}
         </form>
       </div>
     </div>
