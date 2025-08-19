@@ -3,6 +3,7 @@
 import React, { useState } from "react"
 import useAuthGuard from "@/hooks/useAuthGuard"
 import { createContribution } from "@/lib/contributions"
+import TopNav from "@/components/ui/top-nav"
 
 interface ContributionFormProps {
   user: string
@@ -75,21 +76,7 @@ export default function ContributionForm({ user, onNavigate, onLogout }: Contrib
 
   return (
       <div className="min-h-screen bg-gray-50">
-        <nav className="bg-gradient-to-r from-green-500 to-green-600 text-white">
-          <div className="px-4 py-2 text-center bg-green-400">
-            You are Welcome: <strong>{user || "User"}!</strong>
-          </div>
-          <div className="px-4 py-2 flex flex-wrap justify-center space-x-4 text-sm">
-            <button onClick={() => onNavigate("dashboard")} className="hover:underline">My Home</button>
-            <span>My Profile</span>
-            <button onClick={() => onNavigate("paper")} className="hover:underline">Submit a Paper</button>
-            <span>Submit Camera Ready</span>
-            <button onClick={() => onNavigate("contribution")} className="hover:underline font-bold">Submit a Contribution</button>
-            <span>My All Submissions</span>
-            <span>Change Password</span>
-            <button onClick={onLogout} className="hover:underline">Sign Out</button>
-          </div>
-        </nav>
+        <TopNav user={user} current={"contribution" as any} onNavigate={onNavigate as any} onLogout={onLogout} />
 
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="bg-white rounded-lg border border-gray-200 p-8">

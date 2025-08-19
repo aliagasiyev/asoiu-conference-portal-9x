@@ -45,3 +45,7 @@ export async function updateCoAuthor(paperId: number, coAuthorId: number, payloa
 export async function deleteCoAuthor(paperId: number, coAuthorId: number) {
     await api.delete(`/api/papers/${paperId}/co-authors/${coAuthorId}`);
 }
+
+export async function deletePaper(paperId: number) {
+    await api.delete(`/api/papers/${paperId}`);
+}

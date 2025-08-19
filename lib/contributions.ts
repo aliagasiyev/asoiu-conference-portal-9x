@@ -8,3 +8,7 @@ export async function createContribution(payload: any) {
     const { data } = await api.post('/api/contributions', payload);
     return data;
 }
+
+export async function deleteContribution(id: number) {
+    await api.delete(`/api/contributions/${id}`);
+}
