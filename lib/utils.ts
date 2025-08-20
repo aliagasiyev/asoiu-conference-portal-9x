@@ -50,6 +50,6 @@ export function getWelcomeName(userEmail: string | null | undefined): string {
     }
   }
   const email = (userEmail || '').toLowerCase()
-  if (email === 'admin@asiou.az') return 'Elviz Ismayilov'
+  if (email === 'admin@asoiu.az') return 'Elviz Ismayilov'
   return ''
 }
