@@ -95,6 +95,7 @@ export default function PaperSubmission({ user, onNavigate, onLogout }: PaperSub
       paperTypeId: formData.paperTypeId,
       topicIds: formData.selectedTopicIds,
       coAuthors: coAuthors.map(c => ({
+        title: c.title,
         firstName: c.name,
         lastName: c.surname,
         email: c.email,
@@ -112,7 +113,8 @@ export default function PaperSubmission({ user, onNavigate, onLogout }: PaperSub
         await uploadPdf(created.id, file)
       }
       await submitPaper(created.id) // initial submit per flow (optional)
-      alert("Paper created and submitted successfully.")
+      const coAuthorCount = coAuthors.length
+      alert(`Paper created and submitted successfully${coAuthorCount > 0 ? ` with ${coAuthorCount} co-author${coAuthorCount > 1 ? 's' : ''}` : ''}.`)
     } catch (err) {
       alert("Create/submit failed. Check required fields and settings.")
     }
@@ -230,13 +232,6 @@ export default function PaperSubmission({ user, onNavigate, onLogout }: PaperSub
                 </div>
 
                 <div className="flex space-x-4">
-                  <button
-                      type="button"
-                      onClick={addCoAuthorUI}
-                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium transition-colors"
-                  >
-                    Add Co-author
-                  </button>
                   <button
                       type="submit"
                       disabled={paperTypes.length === 0 || topics.length === 0}
@@ -384,6 +379,15 @@ export default function PaperSubmission({ user, onNavigate, onLogout }: PaperSub
                     </div>
                   </div>
               ))}
+              <div className="pt-2">
+                <button
+                    type="button"
+                    onClick={addCoAuthorUI}
+                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium transition-colors"
+                >
+                  Add Co-author
+                </button>
+              </div>
             </div>
           </div>
         </div>

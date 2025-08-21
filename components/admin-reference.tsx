@@ -14,11 +14,13 @@ import {
   adminSetPaperTypeActive,
   type RefItem,
 } from "@/lib/reference-admin"
+import { Layers, FileText, Plus } from "lucide-react"
 
 type Props = { onBack: () => void }
 
 function CrudList({
   title,
+  icon,
   items,
   onCreate,
   onUpdate,
@@ -26,6 +28,7 @@ function CrudList({
   onToggle,
 }: {
   title: string
+  icon?: React.ReactNode
   items: RefItem[]
   onCreate: (name: string) => Promise<void>
   onUpdate: (id: number, name: string) => Promise<void>
@@ -35,24 +38,27 @@ function CrudList({
   const [newName, setNewName] = useState("")
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <h2 className="text-lg font-medium text-orange-600 mb-4">{title}</h2>
+    <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+      <h2 className="text-lg font-semibold text-orange-600 mb-4 flex items-center gap-2">
+        {icon}
+        <span>{title}</span>
+      </h2>
       <div className="flex gap-2 mb-4">
         <input
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           placeholder={`New ${title.slice(0, -1)} name...`}
-          className="flex-1 px-3 py-2 border border-gray-300 rounded"
+          className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
         />
         <button
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded flex items-center gap-2"
           onClick={async () => {
             if (!newName.trim()) return
             await onCreate(newName.trim())
             setNewName("")
           }}
         >
-          Add
+          <Plus className="h-4 w-4" /> Add
         </button>
       </div>
       <ul className="space-y-2">
@@ -60,19 +66,19 @@ function CrudList({
           <li key={it.id} className="flex items-center gap-2">
             <input
               defaultValue={it.name}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
               onBlur={async (e) => {
                 const v = e.currentTarget.value.trim()
                 if (v && v !== it.name) await onUpdate(it.id, v)
               }}
             />
-            <label className="flex items-center gap-1 text-sm text-gray-700">
+            <label className="flex items-center gap-1 text-sm text-gray-700 rounded px-2 py-1 bg-green-50 border border-green-200">
               <input type="checkbox" checked={it.active ?? true} onChange={async (e) => {
                 await onToggle(it.id, e.target.checked, it.name)
               }} /> active
             </label>
             <button
-              className={(it.active ?? true) ? "text-gray-400 underline cursor-not-allowed" : "text-red-700 underline"}
+              className={(it.active ?? true) ? "text-gray-400 underline cursor-not-allowed" : "text-red-700 hover:text-red-800 underline"}
               disabled={it.active ?? true}
               title={(it.active ?? true) ? "Deactivate first, then delete" : "Delete"}
               onClick={() => onDelete(it.id)}
@@ -113,12 +119,12 @@ export default function AdminReference({ onBack }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-gradient-to-r from-green-500 to-green-600 text-white">
-        <div className="px-4 py-2 flex flex-wrap justify-center space-x-4 text-sm">
-          <button onClick={onBack} className="hover:underline">Back</button>
+      <div className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+        <div className="container mx-auto px-4 py-6">
+          <h1 className="text-2xl font-semibold">Admin Panel</h1>
+          <p className="text-sm opacity-90">Manage topics and paper types used during submission</p>
         </div>
-      </nav>
-
+      </div>
       <div className="container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
         {loading ? (
           <div>Loading...</div>
@@ -126,6 +132,7 @@ export default function AdminReference({ onBack }: Props) {
           <>
             <CrudList
               title="Topics"
+              icon={<Layers className="h-5 w-5" />}
               items={topics}
               onCreate={async (name) => { await adminCreateTopic(name); await load() }}
               onUpdate={async (id, name) => { await adminUpdateTopic(id, name); await load() }}
@@ -146,6 +153,7 @@ export default function AdminReference({ onBack }: Props) {
             />
             <CrudList
               title="Paper Types"
+              icon={<FileText className="h-5 w-5" />}
               items={types}
               onCreate={async (name) => { await adminCreatePaperType(name); await load() }}
               onUpdate={async (id, name) => { await adminUpdatePaperType(id, name); await load() }}
@@ -166,6 +174,17 @@ export default function AdminReference({ onBack }: Props) {
             />
           </>
         )}
+      </div>
+
+      <div className="container mx-auto px-4 pb-8">
+        <div className="mt-2 flex justify-center">
+          <button
+            onClick={onBack}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-medium transition-colors"
+          >
+            Back
+          </button>
+        </div>
       </div>
     </div>
   )
