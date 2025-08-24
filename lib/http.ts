@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || '/api',
+    // Prefer explicit NEXT_PUBLIC_API_URL; fallback to API_PROXY_TARGET used locally; else default to backend localhost
+    baseURL: process.env.NEXT_PUBLIC_API_URL || process.env.API_PROXY_TARGET || 'http://localhost:8080',
 });
 
 api.interceptors.request.use((config) => {

@@ -27,11 +27,14 @@ export default function Dashboard({ user, onNavigate, onLogout }: DashboardProps
   const load = async () => {
     setLoading(true)
     try {
-      const [p, c] = await Promise.all([listMyPapers(0, 20), listMyContributions(0, 20)])
-      setPapers(p)
-      setContribs(c)
-    } catch {
-      alert("Failed to load dashboard data")
+      const [pRes, cRes] = await Promise.allSettled([
+        listMyPapers(0, 20),
+        listMyContributions(0, 20)
+      ])
+      if (pRes.status === 'fulfilled') setPapers(pRes.value)
+      else setPapers([]) // likely 403 for non-USER roles
+      if (cRes.status === 'fulfilled') setContribs(cRes.value)
+      else setContribs([])
     } finally {
       setLoading(false)
     }

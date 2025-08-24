@@ -35,6 +35,13 @@ export function tokenHasAdmin(token: string | null): boolean {
   return roles.some(r => r.toUpperCase().includes('ADMIN'))
 }
 
+export function tokenHasReviewer(token: string | null): boolean {
+  const d = decodeJwt(token)
+  if (!d) return false
+  const roles = Array.isArray(d.roles) ? d.roles : typeof d.roles === 'string' ? [d.roles] : []
+  return roles.some(r => r.toUpperCase().includes('REVIEWER'))
+}
+
 export function getWelcomeName(userEmail: string | null | undefined): string {
   if (typeof window !== 'undefined') {
     const cached = localStorage.getItem('asiou_user_name')

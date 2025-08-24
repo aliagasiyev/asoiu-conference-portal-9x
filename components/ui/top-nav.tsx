@@ -1,9 +1,10 @@
 "use client"
 
 import useIsAdmin from "@/hooks/useIsAdmin"
+import useIsReviewer from "@/hooks/useIsReviewer"
 import { getWelcomeName } from "@/lib/utils"
 
-type View = "dashboard" | "paper" | "cameraReady" | "contribution" | "admin" | "password" | "submissions" | "profile"
+type View = "dashboard" | "paper" | "cameraReady" | "contribution" | "admin" | "password" | "submissions" | "profile" | "reviewer"
 
 type Props = {
   user: string
@@ -14,6 +15,7 @@ type Props = {
 
 export default function TopNav({ user, current, onNavigate, onLogout }: Props) {
   const isAdmin = useIsAdmin()
+  const isReviewer = useIsReviewer()
   const item = (label: string, view?: View) => {
     const isActive = view && current === view
     const cls = isActive ? "hover:underline font-bold" : "hover:underline"
@@ -37,6 +39,7 @@ export default function TopNav({ user, current, onNavigate, onLogout }: Props) {
         {item("Submit Camera Ready", "cameraReady")}
         {item("Submit a Contribution", "contribution")}
         {item("My All Submissions", "submissions")}
+        {isReviewer && item("Reviewer", "reviewer")}
         {isAdmin && item("Admin", "admin")}
         <button onClick={onLogout} className="hover:underline">Sign Out</button>
       </div>

@@ -14,12 +14,22 @@ export default function CameraReady({ user, onNavigate, onLogout }: Props) {
   const [papers, setPapers] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [fileMap, setFileMap] = useState<Record<number, File | undefined>>({})
+  const [error, setError] = useState<string | null>(null)
 
   const load = async () => {
     setLoading(true)
+    setError(null)
     try {
       const p = await listMyPapers(0, 50)
       setPapers(p)
+    } catch (e: any) {
+      // Reviewers (no USER role) will get 403 here; show a friendly notice
+      if (e?.response?.status === 403) {
+        setPapers([])
+        setError("Camera-ready is available only for Authors (USER role)")
+      } else {
+        setError("Failed to load papers")
+      }
     } finally {
       setLoading(false)
     }
