@@ -4,12 +4,13 @@ import React, { useEffect, useState } from 'react'
 import { adminListPapers, adminTechnicalCheck, adminAssignReviewer, adminListAssignmentsByPaper, adminFinalDecision, adminCreateReviewer, adminListReviewsByPaper } from '@/lib/admin'
 import AdminReference from '@/components/admin-reference'
 import TopNav from '@/components/ui/top-nav'
+ 
 
 function AdminSubmissions() {
   const [papers, setPapers] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [expanded, setExpanded] = useState<number | null>(null)
-  const [assignForm, setAssignForm] = useState<{ reviewerId: string; dueAtLocal: string }>({ reviewerId: '', dueAtLocal: '' })
+  const [assignForm, setAssignForm] = useState<{ reviewerId: string; dueAt: string }>({ reviewerId: '', dueAt: '' })
 
   const load = async () => {
     setLoading(true)
@@ -29,10 +30,9 @@ function AdminSubmissions() {
   }
 
   const onAssign = async (id: number) => {
-    if (!assignForm.reviewerId || !assignForm.dueAtLocal) return alert('ReviewerId and due date/time required')
-    const iso = new Date(assignForm.dueAtLocal).toISOString()
-    await adminAssignReviewer(id, parseInt(assignForm.reviewerId, 10), iso)
-    setAssignForm({ reviewerId: '', dueAtLocal: '' })
+    if (!assignForm.reviewerId || !assignForm.dueAt) return alert('ReviewerId and dueAt required')
+    await adminAssignReviewer(id, parseInt(assignForm.reviewerId, 10), assignForm.dueAt)
+    setAssignForm({ reviewerId: '', dueAt: '' })
     await load()
   }
 
@@ -77,17 +77,42 @@ function AdminSubmissions() {
                   {expanded === p.id && (
                     <tr>
                       <td className="border border-gray-400 px-2 py-2" colSpan={5}>
-                        <div className="flex gap-2 items-end">
-                          <div>
+                        <div className="flex flex-col md:flex-row gap-4 items-start">
+                          {/* Reviewer ID */}
+                          <div className="flex flex-col">
                             <label className="block text-xs text-gray-600">Reviewer ID</label>
-                            <input className="border px-2 py-1" value={assignForm.reviewerId} onChange={e => setAssignForm(s => ({ ...s, reviewerId: e.target.value }))} />
+                            <input className="border px-2 py-1 rounded" value={assignForm.reviewerId} onChange={e => setAssignForm(s => ({ ...s, reviewerId: e.target.value }))} />
                           </div>
-                          <div>
-                            <label className="block text-xs text-gray-600">Due At</label>
-                            <input type="datetime-local" className="border px-2 py-1" value={assignForm.dueAtLocal} onChange={e => setAssignForm(s => ({ ...s, dueAtLocal: e.target.value }))} />
+
+                          {/* Due At - simple datetime input */}
+                          <div className="flex flex-col flex-1">
+                            <label className="block text-xs text-gray-600 mb-1">Due At</label>
+                            <input
+                              type="datetime-local"
+                              className="border px-2 py-1 rounded"
+                              value={(function(){
+                                const iso = assignForm.dueAt
+                                if (!iso) return ''
+                                const d = new Date(iso); if (isNaN(d.getTime())) return ''
+                                const pad = (n:number) => String(n).padStart(2,'0')
+                                const yyyy=d.getFullYear(), mm=pad(d.getMonth()+1), dd=pad(d.getDate()), hh=pad(d.getHours()), mi=pad(d.getMinutes())
+                                return `${yyyy}-${mm}-${dd}T${hh}:${mi}`
+                              })()}
+                              onChange={e => {
+                                try {
+                                  const iso = new Date(e.target.value).toISOString()
+                                  setAssignForm(s => ({ ...s, dueAt: iso }))
+                                } catch {
+                                  setAssignForm(s => ({ ...s, dueAt: '' }))
+                                }
+                              }}
+                            />
                           </div>
-                          <button className="px-3 py-2 rounded text-sm bg-blue-600 text-white" onClick={() => onAssign(p.id)}>Assign</button>
+
+                          {/* Assign button */}
+                          <button className="px-4 py-2 h-fit rounded text-sm bg-blue-600 text-white shadow-md hover:bg-blue-700" onClick={() => onAssign(p.id)}>Assign</button>
                         </div>
+
                         <Assignments paperId={p.id} />
                       </td>
                     </tr>
