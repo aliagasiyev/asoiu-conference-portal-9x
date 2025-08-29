@@ -88,7 +88,7 @@ function AdminSubmissions() {
                           <div className="flex flex-col md:flex-[2] w-full">
                             <label className="block text-sm text-gray-700 mb-1">Reviewer Gmail</label>
                             <input
-                              className="border px-3 py-2 rounded text-base w-full min-w-[280px] md:min-w-[420px]"
+                              className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base w-full min-w-[280px] md:min-w-[420px] bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition"
                               placeholder="e.g. reviewer1@gmail.com"
                               value={assignForm.reviewerEmail}
                               onChange={e => setAssignForm(s => ({ ...s, reviewerEmail: e.target.value }))}
@@ -100,7 +100,7 @@ function AdminSubmissions() {
                             <label className="block text-sm text-gray-700 mb-1">Due At</label>
                             <input
                               type="datetime-local"
-                              className="border px-3 py-2 rounded text-base"
+                              className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition"
                               value={(function(){
                                 const iso = assignForm.dueAt
                                 if (!iso) return ''
@@ -239,17 +239,12 @@ function AdminUsers() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1">
           <label className="text-sm text-gray-700">Email</label>
-          <input
-            className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-600 transition-colors"
-            placeholder="reviewer1@gmail.com"
-            value={email}
-            onChange={e=>setEmail(e.target.value)}
-          />
+          <input className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition" placeholder="reviewer1@gmail.com" value={email} onChange={e=>setEmail(e.target.value)} />
         </div>
         <div className="flex flex-col gap-1 relative">
           <label className="text-sm text-gray-700">Password</label>
           <input
-            className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base pr-24 bg-white focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-600 transition-colors"
+            className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base pr-20 bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition"
             type={showPassword ? 'text' : 'password'}
             placeholder="••••••••"
             value={password}
@@ -263,21 +258,11 @@ function AdminUsers() {
         </div>
         <div className="flex flex-col gap-1">
           <label className="text-sm text-gray-700">First Name</label>
-          <input
-            className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-600 transition-colors"
-            placeholder="First Name"
-            value={firstName}
-            onChange={e=>setFirstName(e.target.value)}
-          />
+          <input className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition" placeholder="First Name" value={firstName} onChange={e=>setFirstName(e.target.value)} />
         </div>
         <div className="flex flex-col gap-1">
           <label className="text-sm text-gray-700">Last Name</label>
-          <input
-            className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-600 transition-colors"
-            placeholder="Last Name"
-            value={lastName}
-            onChange={e=>setLastName(e.target.value)}
-          />
+          <input className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition" placeholder="Last Name" value={lastName} onChange={e=>setLastName(e.target.value)} />
         </div>
       </div>
       <button className="px-5 py-2.5 rounded bg-green-600 text-white shadow hover:bg-green-700 w-fit" onClick={onCreate}>Create</button>
