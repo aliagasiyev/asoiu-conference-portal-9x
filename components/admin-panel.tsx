@@ -145,24 +145,62 @@ function Assignments({ paperId }: { paperId: number }) {
       setReviews(normalized)
     })()
   }, [paperId])
+  const fmt = (v: string) => {
+    try { const d = new Date(v); return d.toLocaleString() } catch { return '-' }
+  }
   return (
-    <div className="mt-3">
-      <div className="text-sm font-medium mb-2">Assignments</div>
-      <ul className="text-sm list-disc pl-5">
-        {rows.map(r => (
-          <li key={r.id}>{r.id} • {r.paperTitle} • due {new Date(r.dueAt).toLocaleString()} • accepted {r.acceptedAt ? new Date(r.acceptedAt).toLocaleString() : '-'} • completed {r.completed ? 'Yes' : 'No'}</li>
-        ))}
-      </ul>
-      <div className="text-sm font-medium mt-3 mb-2">Reviews</div>
-      {!Array.isArray(reviews) || reviews.length === 0 ? (
-        <div className="text-xs text-gray-500">No reviews yet</div>
-      ) : (
-        <ul className="text-sm list-disc pl-5">
-          {reviews.map((rv: any) => (
-            <li key={rv.id}>{rv.decision}: {rv.comments}</li>
-          ))}
-        </ul>
-      )}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+      {/* Assignments card */}
+      <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-sm font-semibold">Assignments</div>
+          <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">{rows?.length || 0}</span>
+        </div>
+        {(!Array.isArray(rows) || rows.length === 0) ? (
+          <div className="text-xs text-gray-500">No assignments</div>
+        ) : (
+          <ul className="space-y-2">
+            {rows.map((r: any) => (
+              <li key={r.id} className="text-sm rounded border border-gray-100 p-2 flex flex-col gap-1">
+                <div className="flex items-center justify-between">
+                  <div className="font-medium">#{r.id} • {r.paperTitle}</div>
+                  <div className="flex gap-2">
+                    {r.dueSoon ? (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-50 text-red-700 border border-red-200">Due soon</span>
+                    ) : null}
+                    {r.completed ? (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200">Completed</span>
+                    ) : (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">In progress</span>
+                    )}
+                  </div>
+                </div>
+                <div className="text-xs text-gray-600">Due: {fmt(r.dueAt)} • Accepted: {r.acceptedAt ? fmt(r.acceptedAt) : '-'}</div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Reviews card */}
+      <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-sm font-semibold">Reviews</div>
+          <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">{reviews?.length || 0}</span>
+        </div>
+        {(!Array.isArray(reviews) || reviews.length === 0) ? (
+          <div className="text-xs text-gray-500">No reviews yet</div>
+        ) : (
+          <ul className="space-y-2">
+            {reviews.map((rv: any) => (
+              <li key={rv.id} className="text-sm rounded border border-gray-100 p-2 flex items-start gap-2">
+                <span className={`text-[10px] px-2 py-0.5 rounded-full border ${rv.decision==='ACCEPT' ? 'bg-green-50 text-green-700 border-green-200' : rv.decision==='REJECT' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>{rv.decision}</span>
+                <span className="text-gray-700">{rv.comments}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   )
 }
