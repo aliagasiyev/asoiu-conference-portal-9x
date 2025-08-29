@@ -18,8 +18,8 @@ export async function adminFinalDecision(id: number, status: 'ACCEPTED'|'REJECTE
 }
 
 // Reviews
-export async function adminAssignReviewer(paperId: number, reviewerId: number, dueAt: string) {
-  const { data } = await api.post(`/api/admin/reviews/papers/${paperId}/assign`, { reviewerId, dueAt })
+export async function adminAssignReviewer(paperId: number, reviewerEmail: string, dueAt: string) {
+  const { data } = await api.post(`/api/admin/reviews/papers/${paperId}/assign`, { reviewerEmail, dueAt })
   return data
 }
 export async function adminListAssignmentsByPaper(paperId: number) {

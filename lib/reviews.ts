@@ -33,7 +33,7 @@ export async function listAssignedPapers() {
 }
 
 // Admin endpoints (optional usage from UI)
-export async function adminAssignReviewer(paperId: number, payload: { reviewerId: number; dueAt: string }) {
+export async function adminAssignReviewer(paperId: number, payload: { reviewerEmail: string; dueAt: string }) {
   const { data } = await api.post(`/api/admin/reviews/papers/${paperId}/assign`, payload)
   return data
 }

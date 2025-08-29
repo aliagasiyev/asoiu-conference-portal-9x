@@ -10,7 +10,7 @@ function AdminSubmissions() {
   const [papers, setPapers] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [expanded, setExpanded] = useState<number | null>(null)
-  const [assignForm, setAssignForm] = useState<{ reviewerId: string; dueAt: string }>({ reviewerId: '', dueAt: '' })
+  const [assignForm, setAssignForm] = useState<{ reviewerEmail: string; dueAt: string }>({ reviewerEmail: '', dueAt: '' })
 
   const load = async () => {
     setLoading(true)
@@ -30,9 +30,15 @@ function AdminSubmissions() {
   }
 
   const onAssign = async (id: number) => {
-    if (!assignForm.reviewerId || !assignForm.dueAt) return alert('ReviewerId and dueAt required')
-    await adminAssignReviewer(id, parseInt(assignForm.reviewerId, 10), assignForm.dueAt)
-    setAssignForm({ reviewerId: '', dueAt: '' })
+    if (!assignForm.reviewerEmail || !assignForm.dueAt) return alert('Reviewer Gmail and DueAt required')
+    try {
+      await adminAssignReviewer(id, assignForm.reviewerEmail, assignForm.dueAt)
+      alert('Assigned successfully')
+    } catch (e: any) {
+      const msg = e?.response?.data?.message || 'Failed to assign reviewer. Ensure Gmail exists and is a reviewer.'
+      alert(msg)
+    }
+    setAssignForm({ reviewerEmail: '', dueAt: '' })
     await load()
   }
 
@@ -78,10 +84,10 @@ function AdminSubmissions() {
                     <tr>
                       <td className="border border-gray-400 px-2 py-2" colSpan={5}>
                         <div className="flex flex-col md:flex-row gap-4 items-start">
-                          {/* Reviewer ID */}
+                          {/* Reviewer Email */}
                           <div className="flex flex-col">
-                            <label className="block text-xs text-gray-600">Reviewer ID</label>
-                            <input className="border px-2 py-1 rounded" value={assignForm.reviewerId} onChange={e => setAssignForm(s => ({ ...s, reviewerId: e.target.value }))} />
+                            <label className="block text-xs text-gray-600">Reviewer Gmail</label>
+                            <input className="border px-2 py-1 rounded" placeholder="e.g. reviewer1@gmail.com" value={assignForm.reviewerEmail} onChange={e => setAssignForm(s => ({ ...s, reviewerEmail: e.target.value }))} />
                           </div>
 
                           {/* Due At - simple datetime input */}
