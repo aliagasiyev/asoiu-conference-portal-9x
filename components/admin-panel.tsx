@@ -83,19 +83,24 @@ function AdminSubmissions() {
                   {expanded === p.id && (
                     <tr>
                       <td className="border border-gray-400 px-2 py-2" colSpan={5}>
-                        <div className="flex flex-col md:flex-row gap-4 items-start">
+                        <div className="flex flex-col md:flex-row gap-4 items-start md:items-end">
                           {/* Reviewer Email */}
-                          <div className="flex flex-col">
-                            <label className="block text-xs text-gray-600">Reviewer Gmail</label>
-                            <input className="border px-2 py-1 rounded" placeholder="e.g. reviewer1@gmail.com" value={assignForm.reviewerEmail} onChange={e => setAssignForm(s => ({ ...s, reviewerEmail: e.target.value }))} />
+                          <div className="flex flex-col md:flex-[2] w-full">
+                            <label className="block text-sm text-gray-700 mb-1">Reviewer Gmail</label>
+                            <input
+                              className="border px-3 py-2 rounded text-base w-full min-w-[280px] md:min-w-[420px]"
+                              placeholder="e.g. reviewer1@gmail.com"
+                              value={assignForm.reviewerEmail}
+                              onChange={e => setAssignForm(s => ({ ...s, reviewerEmail: e.target.value }))}
+                            />
                           </div>
 
                           {/* Due At - simple datetime input */}
-                          <div className="flex flex-col flex-1">
-                            <label className="block text-xs text-gray-600 mb-1">Due At</label>
+                          <div className="flex flex-col md:flex-[1] flex-1 w-full">
+                            <label className="block text-sm text-gray-700 mb-1">Due At</label>
                             <input
                               type="datetime-local"
-                              className="border px-2 py-1 rounded"
+                              className="border px-3 py-2 rounded text-base"
                               value={(function(){
                                 const iso = assignForm.dueAt
                                 if (!iso) return ''
@@ -116,7 +121,7 @@ function AdminSubmissions() {
                           </div>
 
                           {/* Assign button */}
-                          <button className="px-4 py-2 h-fit rounded text-sm bg-blue-600 text-white shadow-md hover:bg-blue-700" onClick={() => onAssign(p.id)}>Assign</button>
+                          <button className="px-5 py-2.5 h-fit rounded text-base bg-blue-600 text-white shadow-md hover:bg-blue-700" onClick={() => onAssign(p.id)}>Assign</button>
                         </div>
 
                         <Assignments paperId={p.id} />
@@ -151,17 +156,20 @@ function Assignments({ paperId }: { paperId: number }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
       {/* Assignments card */}
-      <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+      <div className="rounded-xl border border-gray-300 bg-white p-5 shadow">
         <div className="flex items-center justify-between mb-3">
-          <div className="text-sm font-semibold">Assignments</div>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">{rows?.length || 0}</span>
+          <div className="text-base font-semibold">Assignments</div>
+          <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200">{rows?.length || 0}</span>
         </div>
         {(!Array.isArray(rows) || rows.length === 0) ? (
           <div className="text-xs text-gray-500">No assignments</div>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {rows.map((r: any) => (
-              <li key={r.id} className="text-sm rounded border border-gray-100 p-2 flex flex-col gap-1">
+              <li
+                key={r.id}
+                className={`text-base rounded-lg border border-gray-200 p-3 flex flex-col gap-1 bg-white/50 hover:bg-gray-50 transition ${r.completed ? 'border-l-4 border-green-400' : (r.dueSoon ? 'border-l-4 border-red-400' : 'border-l-4 border-amber-400')}`}
+              >
                 <div className="flex items-center justify-between">
                   <div className="font-medium">#{r.id} • {r.paperTitle}</div>
                   <div className="flex gap-2">
@@ -175,7 +183,10 @@ function Assignments({ paperId }: { paperId: number }) {
                     )}
                   </div>
                 </div>
-                <div className="text-xs text-gray-600">Due: {fmt(r.dueAt)} • Accepted: {r.acceptedAt ? fmt(r.acceptedAt) : '-'}</div>
+                <div className="text-base text-gray-700">
+                  <span className="font-medium">Due:</span> {fmt(r.dueAt)}
+                  <span className="ml-3 font-medium">Accepted:</span> {r.acceptedAt ? fmt(r.acceptedAt) : '-'}
+                </div>
               </li>
             ))}
           </ul>
@@ -183,19 +194,22 @@ function Assignments({ paperId }: { paperId: number }) {
       </div>
 
       {/* Reviews card */}
-      <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+      <div className="rounded-xl border border-gray-300 bg-white p-5 shadow">
         <div className="flex items-center justify-between mb-3">
-          <div className="text-sm font-semibold">Reviews</div>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">{reviews?.length || 0}</span>
+          <div className="text-base font-semibold">Reviews</div>
+          <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200">{reviews?.length || 0}</span>
         </div>
         {(!Array.isArray(reviews) || reviews.length === 0) ? (
           <div className="text-xs text-gray-500">No reviews yet</div>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {reviews.map((rv: any) => (
-              <li key={rv.id} className="text-sm rounded border border-gray-100 p-2 flex items-start gap-2">
+              <li
+                key={rv.id}
+                className={`text-base rounded-lg border p-3 flex items-start gap-2 bg-white/50 hover:bg-gray-50 transition ${rv.decision==='ACCEPT' ? 'border-green-300' : rv.decision==='REJECT' ? 'border-red-300' : 'border-amber-300'}`}
+              >
                 <span className={`text-[10px] px-2 py-0.5 rounded-full border ${rv.decision==='ACCEPT' ? 'bg-green-50 text-green-700 border-green-200' : rv.decision==='REJECT' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>{rv.decision}</span>
-                <span className="text-gray-700">{rv.comments}</span>
+                <span className="text-gray-800">{rv.comments}</span>
               </li>
             ))}
           </ul>
@@ -210,6 +224,7 @@ function AdminUsers() {
   const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   const onCreate = async () => {
     if (!email || !password || !firstName || !lastName) return alert('All fields required')
@@ -219,15 +234,53 @@ function AdminUsers() {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <div className="text-lg font-semibold">Create Reviewer Account</div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <input className="border px-3 py-2" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} />
-        <input className="border px-3 py-2" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} />
-        <input className="border px-3 py-2" placeholder="First Name" value={firstName} onChange={e=>setFirstName(e.target.value)} />
-        <input className="border px-3 py-2" placeholder="Last Name" value={lastName} onChange={e=>setLastName(e.target.value)} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-1">
+          <label className="text-sm text-gray-700">Email</label>
+          <input
+            className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-600 transition-colors"
+            placeholder="reviewer1@gmail.com"
+            value={email}
+            onChange={e=>setEmail(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-1 relative">
+          <label className="text-sm text-gray-700">Password</label>
+          <input
+            className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base pr-24 bg-white focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-600 transition-colors"
+            type={showPassword ? 'text' : 'password'}
+            placeholder="••••••••"
+            value={password}
+            onChange={e=>setPassword(e.target.value)}
+          />
+          <button
+            type="button"
+            className="absolute right-2 bottom-2 px-2 py-1 text-xs rounded border bg-gray-50 hover:bg-gray-100"
+            onClick={()=>setShowPassword(v=>!v)}
+          >{showPassword ? 'Hide' : 'Show'}</button>
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm text-gray-700">First Name</label>
+          <input
+            className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-600 transition-colors"
+            placeholder="First Name"
+            value={firstName}
+            onChange={e=>setFirstName(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm text-gray-700">Last Name</label>
+          <input
+            className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-600 transition-colors"
+            placeholder="Last Name"
+            value={lastName}
+            onChange={e=>setLastName(e.target.value)}
+          />
+        </div>
       </div>
-      <button className="px-4 py-2 rounded bg-green-600 text-white" onClick={onCreate}>Create</button>
+      <button className="px-5 py-2.5 rounded bg-green-600 text-white shadow hover:bg-green-700 w-fit" onClick={onCreate}>Create</button>
     </div>
   )
 }
