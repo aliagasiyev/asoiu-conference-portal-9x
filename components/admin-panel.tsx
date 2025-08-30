@@ -282,10 +282,10 @@ export default function AdminPanel({ onBack, user, onNavigate, onLogout }: { onB
             <button className={`px-3 py-2 rounded ${tab==='reference'?'bg-green-600 text-white':'bg-gray-100'}`} onClick={()=>setTab('reference')}>Reference</button>
             <button className={`px-3 py-2 rounded ${tab==='users'?'bg-green-600 text-white':'bg-gray-100'}`} onClick={()=>setTab('users')}>Users</button>
             <div className="flex-1" />
-            <button className="px-3 py-2 rounded bg-gray-200" onClick={onBack}>Back</button>
+            <button className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700" onClick={onBack}>Back</button>
           </div>
           {tab === 'submissions' && <AdminSubmissions />}
-          {tab === 'reference' && <AdminReference onBack={()=>{}} />}
+          {tab === 'reference' && <AdminReference />}
           {tab === 'users' && <AdminUsers />}
         </div>
       </div>

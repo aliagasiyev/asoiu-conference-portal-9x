@@ -19,7 +19,7 @@ import {
 } from "@/lib/reference-admin"
 import { Layers, FileText, Plus } from "lucide-react"
 
-type Props = { onBack: () => void }
+type Props = {}
 
 function CrudList({
   title,
@@ -95,7 +95,7 @@ function CrudList({
   )
 }
 
-export default function AdminReference({ onBack }: Props) {
+export default function AdminReference({}: Props) {
   const [topics, setTopics] = useState<RefItem[]>([])
   const [types, setTypes] = useState<RefItem[]>([])
   const [settings, setSettings] = useState<ConferenceSettings | null>(null)
@@ -211,16 +211,7 @@ export default function AdminReference({ onBack }: Props) {
         )}
       </div>
 
-      <div className="container mx-auto px-4 pb-8">
-        <div className="mt-2 flex justify-center">
-          <button
-            onClick={onBack}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-medium transition-colors"
-          >
-            Back
-          </button>
-        </div>
-      </div>
+      {/* Removed bottom Back button as requested */}
     </div>
   )
 }
