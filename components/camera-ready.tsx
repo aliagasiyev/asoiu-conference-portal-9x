@@ -39,7 +39,15 @@ export default function CameraReady({ user, onNavigate, onLogout }: Props) {
 
   const canUpload = (status: string) => {
     const s = (status || "").toUpperCase()
-    return s === "SUBMITTED" || s === "CAMERA_READY_PENDING" || s === "DRAFT"
+    // Allow uploading camera-ready when paper is accepted or pending camera-ready,
+    // and keep support for earlier states if needed
+    return (
+      s === "ACCEPTED" ||
+      s === "CAMERA_READY_PENDING" ||
+      s === "SUBMITTED" ||
+      s === "DRAFT" ||
+      s === "REVISIONS_REQUIRED"
+    )
   }
 
   const onUpload = async (id: number) => {

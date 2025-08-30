@@ -12,6 +12,9 @@ import {
   adminDeletePaperType,
   adminSetTopicActive,
   adminSetPaperTypeActive,
+  adminGetConferenceSettings,
+  adminUpdateConferenceSettings,
+  type ConferenceSettings,
   type RefItem,
 } from "@/lib/reference-admin"
 import { Layers, FileText, Plus } from "lucide-react"
@@ -95,17 +98,20 @@ function CrudList({
 export default function AdminReference({ onBack }: Props) {
   const [topics, setTopics] = useState<RefItem[]>([])
   const [types, setTypes] = useState<RefItem[]>([])
+  const [settings, setSettings] = useState<ConferenceSettings | null>(null)
   const [loading, setLoading] = useState(true)
 
   const load = async () => {
     setLoading(true)
     try {
-      const [tps, pts] = await Promise.all([
+      const [tps, pts, s] = await Promise.all([
         adminListTopics(),
         adminListPaperTypes(),
+        adminGetConferenceSettings(),
       ])
       setTopics(tps)
       setTypes(pts)
+      setSettings(s)
     } catch (e: any) {
       alert(e?.response?.status === 403 ? "You are not authorized (ADMIN role required)." : "Failed to load admin data.")
     } finally {
@@ -172,6 +178,35 @@ export default function AdminReference({ onBack }: Props) {
                 setTypes(prev => prev.map(it => it.id === id ? { ...it, active } : it))
               }}
             />
+            <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+              <h2 className="text-lg font-semibold text-green-700 mb-4">Conference Settings</h2>
+              {settings && (
+                <div className="space-y-4">
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={settings.cameraReadyOpen}
+                      onChange={async (e) => {
+                        const s = await adminUpdateConferenceSettings({ cameraReadyOpen: e.target.checked })
+                        setSettings(s)
+                      }}
+                    />
+                    Camera Ready Open
+                  </label>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={settings.submissionsOpen}
+                      onChange={async (e) => {
+                        const s = await adminUpdateConferenceSettings({ submissionsOpen: e.target.checked })
+                        setSettings(s)
+                      }}
+                    />
+                    Submissions Open
+                  </label>
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>

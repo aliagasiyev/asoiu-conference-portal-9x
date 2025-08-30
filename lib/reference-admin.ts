@@ -2,6 +2,26 @@ import api from './http'
 
 export type RefItem = { id: number; name: string; active?: boolean }
 
+// Conference settings
+export type ConferenceSettings = {
+  id: number
+  conferenceName: string
+  submissionsOpen: boolean
+  cameraReadyOpen: boolean
+}
+
+export async function adminGetConferenceSettings(): Promise<ConferenceSettings> {
+  const { data } = await api.get('/api/admin/reference/settings')
+  return data
+}
+
+export async function adminUpdateConferenceSettings(
+  patch: Partial<Pick<ConferenceSettings, 'conferenceName' | 'submissionsOpen' | 'cameraReadyOpen'>>,
+): Promise<ConferenceSettings> {
+  const { data } = await api.put('/api/admin/reference/settings', patch)
+  return data
+}
+
 // Topics
 export async function adminListTopics(): Promise<RefItem[]> {
   const { data } = await api.get('/api/admin/reference/topics')
