@@ -17,7 +17,7 @@ import {
   type ConferenceSettings,
   type RefItem,
 } from "@/lib/reference-admin"
-import { Layers, FileText, Plus } from "lucide-react"
+import { Layers, FileText, Plus, Settings } from "lucide-react"
 
 type Props = {}
 
@@ -178,32 +178,58 @@ export default function AdminReference({}: Props) {
                 setTypes(prev => prev.map(it => it.id === id ? { ...it, active } : it))
               }}
             />
-            <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-              <h2 className="text-lg font-semibold text-green-700 mb-4">Conference Settings</h2>
+            <div className="rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+              <div className="flex items-center gap-2 px-6 py-4 border-b border-gray-100 bg-white">
+                <Settings className="h-5 w-5 text-green-600" />
+                <h2 className="text-base font-semibold text-gray-900">Conference Settings</h2>
+              </div>
               {settings && (
-                <div className="space-y-4">
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={settings.cameraReadyOpen}
-                      onChange={async (e) => {
-                        const s = await adminUpdateConferenceSettings({ cameraReadyOpen: e.target.checked })
+                <div className="px-6 py-4">
+                  {/* Camera Ready Open */}
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">Camera Ready Open</div>
+                      <div className="text-xs text-gray-500">Allow authors to upload and submit final camera‑ready PDFs.</div>
+                    </div>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={settings.cameraReadyOpen}
+                      onClick={async () => {
+                        const s = await adminUpdateConferenceSettings({ cameraReadyOpen: !settings.cameraReadyOpen })
                         setSettings(s)
                       }}
-                    />
-                    Camera Ready Open
-                  </label>
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={settings.submissionsOpen}
-                      onChange={async (e) => {
-                        const s = await adminUpdateConferenceSettings({ submissionsOpen: e.target.checked })
+                      className={`${settings.cameraReadyOpen ? 'bg-green-600' : 'bg-gray-300'} relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500`}
+                    >
+                      <span
+                        className={`${settings.cameraReadyOpen ? 'translate-x-5' : 'translate-x-1'} inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform`}
+                      />
+                    </button>
+                  </div>
+
+                  <div className="my-4 border-t border-gray-100" />
+
+                  {/* Submissions Open */}
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">Submissions Open</div>
+                      <div className="text-xs text-gray-500">Allow authors to create and submit new papers.</div>
+                    </div>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={settings.submissionsOpen}
+                      onClick={async () => {
+                        const s = await adminUpdateConferenceSettings({ submissionsOpen: !settings.submissionsOpen })
                         setSettings(s)
                       }}
-                    />
-                    Submissions Open
-                  </label>
+                      className={`${settings.submissionsOpen ? 'bg-green-600' : 'bg-gray-300'} relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500`}
+                    >
+                      <span
+                        className={`${settings.submissionsOpen ? 'translate-x-5' : 'translate-x-1'} inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform`}
+                      />
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
