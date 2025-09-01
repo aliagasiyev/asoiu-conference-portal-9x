@@ -245,4 +245,4 @@ public/
 
 ## 📄 License
 
-MIT © 2025 ASOIU Conference Portal authors
+Apache 2.0
