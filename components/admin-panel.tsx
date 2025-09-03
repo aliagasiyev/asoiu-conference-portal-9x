@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { adminListPapers, adminTechnicalCheck, adminAssignReviewer, adminListAssignmentsByPaper, adminFinalDecision, adminCreateReviewer, adminListReviewsByPaper } from '@/lib/admin'
 import AdminReference from '@/components/admin-reference'
 import TopNav from '@/components/ui/top-nav'
- 
+
 
 function AdminSubmissions() {
   const [papers, setPapers] = useState<any[]>([])
@@ -50,91 +50,91 @@ function AdminSubmissions() {
   }
 
   return (
-    <div className="space-y-4">
-      {loading ? <div>Loading...</div> : (
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-600 text-white">
-                <th className="border border-gray-400 px-2 py-1 text-left">ID</th>
-                <th className="border border-gray-400 px-2 py-1 text-left">Title</th>
-                <th className="border border-gray-400 px-2 py-1 text-left">Type</th>
-                <th className="border border-gray-400 px-2 py-1 text-left">Status</th>
-                <th className="border border-gray-400 px-2 py-1 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {papers.map((p: any) => (
-                <React.Fragment key={p.id}>
-                  <tr className="odd:bg-gray-50">
-                    <td className="border border-gray-400 px-2 py-1">{p.id}</td>
-                    <td className="border border-gray-400 px-2 py-1">{p.title}</td>
-                    <td className="border border-gray-400 px-2 py-1">{p.paperType}</td>
-                    <td className="border border-gray-400 px-2 py-1">{p.status}</td>
-                    <td className="border border-gray-400 px-2 py-1">
-                      <div className="flex flex-wrap gap-2">
-                        <button className="px-2 py-1 rounded text-xs bg-amber-50 text-amber-700 border border-amber-200" onClick={() => onTechCheck(p.id, true)}>Tech Check OK</button>
-                        <button className="px-2 py-1 rounded text-xs bg-red-50 text-red-700 border border-red-200" onClick={() => onTechCheck(p.id, false)}>Tech Reject</button>
-                        <button className="px-2 py-1 rounded text-xs bg-blue-50 text-blue-700 border border-blue-200" onClick={() => setExpanded(expanded === p.id ? null : p.id)}>{expanded === p.id ? 'Hide' : 'Assign'}</button>
-                        <button className="px-2 py-1 rounded text-xs bg-green-50 text-green-700 border border-green-200" onClick={() => onDecision(p.id)}>Final Decision</button>
-                      </div>
-                    </td>
-                  </tr>
-                  {expanded === p.id && (
-                    <tr>
-                      <td className="border border-gray-400 px-2 py-2" colSpan={5}>
-                        <div className="flex flex-col md:flex-row gap-4 items-start md:items-end">
-                          {/* Reviewer Email */}
-                          <div className="flex flex-col md:flex-[2] w-full">
-                            <label className="block text-sm text-gray-700 mb-1">Reviewer Gmail</label>
-                            <input
-                              className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base w-full min-w-[280px] md:min-w-[420px] bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition"
-                              placeholder="e.g. reviewer1@gmail.com"
-                              value={assignForm.reviewerEmail}
-                              onChange={e => setAssignForm(s => ({ ...s, reviewerEmail: e.target.value }))}
-                            />
+      <div className="space-y-4">
+        {loading ? <div>Loading...</div> : (
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                <tr className="bg-gray-600 text-white">
+                  <th className="border border-gray-400 px-2 py-1 text-left">ID</th>
+                  <th className="border border-gray-400 px-2 py-1 text-left">Title</th>
+                  <th className="border border-gray-400 px-2 py-1 text-left">Type</th>
+                  <th className="border border-gray-400 px-2 py-1 text-left">Status</th>
+                  <th className="border border-gray-400 px-2 py-1 text-left">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {papers.map((p: any) => (
+                    <React.Fragment key={p.id}>
+                      <tr className="odd:bg-gray-50">
+                        <td className="border border-gray-400 px-2 py-1">{p.id}</td>
+                        <td className="border border-gray-400 px-2 py-1">{p.title}</td>
+                        <td className="border border-gray-400 px-2 py-1">{p.paperType}</td>
+                        <td className="border border-gray-400 px-2 py-1">{p.status}</td>
+                        <td className="border border-gray-400 px-2 py-1">
+                          <div className="flex flex-wrap gap-2">
+                            <button className="px-2 py-1 rounded text-xs bg-amber-50 text-amber-700 border border-amber-200" onClick={() => onTechCheck(p.id, true)}>Tech Check OK</button>
+                            <button className="px-2 py-1 rounded text-xs bg-red-50 text-red-700 border border-red-200" onClick={() => onTechCheck(p.id, false)}>Tech Reject</button>
+                            <button className="px-2 py-1 rounded text-xs bg-blue-50 text-blue-700 border border-blue-200" onClick={() => setExpanded(expanded === p.id ? null : p.id)}>{expanded === p.id ? 'Hide' : 'Assign'}</button>
+                            <button className="px-2 py-1 rounded text-xs bg-green-50 text-green-700 border border-green-200" onClick={() => onDecision(p.id)}>Final Decision</button>
                           </div>
+                        </td>
+                      </tr>
+                      {expanded === p.id && (
+                          <tr>
+                            <td className="border border-gray-400 px-2 py-2" colSpan={5}>
+                              <div className="flex flex-col md:flex-row gap-4 items-start md:items-end">
+                                {/* Reviewer Email */}
+                                <div className="flex flex-col md:flex-[2] w-full">
+                                  <label className="block text-sm text-gray-700 mb-1">Reviewer Gmail</label>
+                                  <input
+                                      className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base w-full min-w-[280px] md:min-w-[420px] bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition"
+                                      placeholder="e.g. reviewer1@gmail.com"
+                                      value={assignForm.reviewerEmail}
+                                      onChange={e => setAssignForm(s => ({ ...s, reviewerEmail: e.target.value }))}
+                                  />
+                                </div>
 
-                          {/* Due At - simple datetime input */}
-                          <div className="flex flex-col md:flex-[1] flex-1 w-full">
-                            <label className="block text-sm text-gray-700 mb-1">Due At</label>
-                            <input
-                              type="datetime-local"
-                              className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition"
-                              value={(function(){
-                                const iso = assignForm.dueAt
-                                if (!iso) return ''
-                                const d = new Date(iso); if (isNaN(d.getTime())) return ''
-                                const pad = (n:number) => String(n).padStart(2,'0')
-                                const yyyy=d.getFullYear(), mm=pad(d.getMonth()+1), dd=pad(d.getDate()), hh=pad(d.getHours()), mi=pad(d.getMinutes())
-                                return `${yyyy}-${mm}-${dd}T${hh}:${mi}`
-                              })()}
-                              onChange={e => {
-                                try {
-                                  const iso = new Date(e.target.value).toISOString()
-                                  setAssignForm(s => ({ ...s, dueAt: iso }))
-                                } catch {
-                                  setAssignForm(s => ({ ...s, dueAt: '' }))
-                                }
-                              }}
-                            />
-                          </div>
+                                {/* Due At - simple datetime input */}
+                                <div className="flex flex-col md:flex-[1] flex-1 w-full">
+                                  <label className="block text-sm text-gray-700 mb-1">Due At</label>
+                                  <input
+                                      type="datetime-local"
+                                      className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition"
+                                      value={(function(){
+                                        const iso = assignForm.dueAt
+                                        if (!iso) return ''
+                                        const d = new Date(iso); if (isNaN(d.getTime())) return ''
+                                        const pad = (n:number) => String(n).padStart(2,'0')
+                                        const yyyy=d.getFullYear(), mm=pad(d.getMonth()+1), dd=pad(d.getDate()), hh=pad(d.getHours()), mi=pad(d.getMinutes())
+                                        return `${yyyy}-${mm}-${dd}T${hh}:${mi}`
+                                      })()}
+                                      onChange={e => {
+                                        try {
+                                          const iso = new Date(e.target.value).toISOString()
+                                          setAssignForm(s => ({ ...s, dueAt: iso }))
+                                        } catch {
+                                          setAssignForm(s => ({ ...s, dueAt: '' }))
+                                        }
+                                      }}
+                                  />
+                                </div>
 
-                          {/* Assign button */}
-                          <button className="px-5 py-2.5 h-fit rounded text-base bg-blue-600 text-white shadow-md hover:bg-blue-700" onClick={() => onAssign(p.id)}>Assign</button>
-                        </div>
+                                {/* Assign button */}
+                                <button className="px-5 py-2.5 h-fit rounded text-base bg-blue-600 text-white shadow-md hover:bg-blue-700" onClick={() => onAssign(p.id)}>Assign</button>
+                              </div>
 
-                        <Assignments paperId={p.id} />
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+                              <Assignments paperId={p.id} />
+                            </td>
+                          </tr>
+                      )}
+                    </React.Fragment>
+                ))}
+                </tbody>
+              </table>
+            </div>
+        )}
+      </div>
   )
 }
 
@@ -154,68 +154,68 @@ function Assignments({ paperId }: { paperId: number }) {
     try { const d = new Date(v); return d.toLocaleString() } catch { return '-' }
   }
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-      {/* Assignments card */}
-      <div className="rounded-xl border border-gray-300 bg-white p-5 shadow">
-        <div className="flex items-center justify-between mb-3">
-          <div className="text-base font-semibold">Assignments</div>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200">{rows?.length || 0}</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+        {/* Assignments card */}
+        <div className="rounded-xl border border-gray-300 bg-white p-5 shadow">
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-base font-semibold">Assignments</div>
+            <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200">{rows?.length || 0}</span>
+          </div>
+          {(!Array.isArray(rows) || rows.length === 0) ? (
+              <div className="text-xs text-gray-500">No assignments</div>
+          ) : (
+              <ul className="space-y-3">
+                {rows.map((r: any) => (
+                    <li
+                        key={r.id}
+                        className={`text-base rounded-lg border border-gray-200 p-3 flex flex-col gap-1 bg-white/50 hover:bg-gray-50 transition ${r.completed ? 'border-l-4 border-green-400' : (r.dueSoon ? 'border-l-4 border-red-400' : 'border-l-4 border-amber-400')}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="font-medium">#{r.id} • {r.paperTitle}</div>
+                        <div className="flex gap-2">
+                          {r.dueSoon ? (
+                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-50 text-red-700 border border-red-200">Due soon</span>
+                          ) : null}
+                          {r.completed ? (
+                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200">Completed</span>
+                          ) : (
+                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">In progress</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-base text-gray-700">
+                        <span className="font-medium">Due:</span> {fmt(r.dueAt)}
+                        <span className="ml-3 font-medium">Accepted:</span> {r.acceptedAt ? fmt(r.acceptedAt) : '-'}
+                      </div>
+                    </li>
+                ))}
+              </ul>
+          )}
         </div>
-        {(!Array.isArray(rows) || rows.length === 0) ? (
-          <div className="text-xs text-gray-500">No assignments</div>
-        ) : (
-          <ul className="space-y-3">
-            {rows.map((r: any) => (
-              <li
-                key={r.id}
-                className={`text-base rounded-lg border border-gray-200 p-3 flex flex-col gap-1 bg-white/50 hover:bg-gray-50 transition ${r.completed ? 'border-l-4 border-green-400' : (r.dueSoon ? 'border-l-4 border-red-400' : 'border-l-4 border-amber-400')}`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="font-medium">#{r.id} • {r.paperTitle}</div>
-                  <div className="flex gap-2">
-                    {r.dueSoon ? (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-50 text-red-700 border border-red-200">Due soon</span>
-                    ) : null}
-                    {r.completed ? (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200">Completed</span>
-                    ) : (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">In progress</span>
-                    )}
-                  </div>
-                </div>
-                <div className="text-base text-gray-700">
-                  <span className="font-medium">Due:</span> {fmt(r.dueAt)}
-                  <span className="ml-3 font-medium">Accepted:</span> {r.acceptedAt ? fmt(r.acceptedAt) : '-'}
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
 
-      {/* Reviews card */}
-      <div className="rounded-xl border border-gray-300 bg-white p-5 shadow">
-        <div className="flex items-center justify-between mb-3">
-          <div className="text-base font-semibold">Reviews</div>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200">{reviews?.length || 0}</span>
+        {/* Reviews card */}
+        <div className="rounded-xl border border-gray-300 bg-white p-5 shadow">
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-base font-semibold">Reviews</div>
+            <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200">{reviews?.length || 0}</span>
+          </div>
+          {(!Array.isArray(reviews) || reviews.length === 0) ? (
+              <div className="text-xs text-gray-500">No reviews yet</div>
+          ) : (
+              <ul className="space-y-3">
+                {reviews.map((rv: any) => (
+                    <li
+                        key={rv.id}
+                        className={`text-base rounded-lg border p-3 flex items-start gap-2 bg-white/50 hover:bg-gray-50 transition ${rv.decision==='ACCEPT' ? 'border-green-300' : rv.decision==='REJECT' ? 'border-red-300' : 'border-amber-300'}`}
+                    >
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full border ${rv.decision==='ACCEPT' ? 'bg-green-50 text-green-700 border-green-200' : rv.decision==='REJECT' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>{rv.decision}</span>
+                      <span className="text-gray-800">{rv.comments}</span>
+                    </li>
+                ))}
+              </ul>
+          )}
         </div>
-        {(!Array.isArray(reviews) || reviews.length === 0) ? (
-          <div className="text-xs text-gray-500">No reviews yet</div>
-        ) : (
-          <ul className="space-y-3">
-            {reviews.map((rv: any) => (
-              <li
-                key={rv.id}
-                className={`text-base rounded-lg border p-3 flex items-start gap-2 bg-white/50 hover:bg-gray-50 transition ${rv.decision==='ACCEPT' ? 'border-green-300' : rv.decision==='REJECT' ? 'border-red-300' : 'border-amber-300'}`}
-              >
-                <span className={`text-[10px] px-2 py-0.5 rounded-full border ${rv.decision==='ACCEPT' ? 'bg-green-50 text-green-700 border-green-200' : rv.decision==='REJECT' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>{rv.decision}</span>
-                <span className="text-gray-800">{rv.comments}</span>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
-    </div>
   )
 }
 
@@ -234,61 +234,61 @@ function AdminUsers() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="text-lg font-semibold">Create Reviewer Account</div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-700">Email</label>
-          <input className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition" placeholder="reviewer1@gmail.com" value={email} onChange={e=>setEmail(e.target.value)} />
+      <div className="space-y-4">
+        <div className="text-lg font-semibold">Create Reviewer Account</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-gray-700">Email</label>
+            <input className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition" placeholder="reviewer1@gmail.com" value={email} onChange={e=>setEmail(e.target.value)} />
+          </div>
+          <div className="flex flex-col gap-1 relative">
+            <label className="text-sm text-gray-700">Password</label>
+            <input
+                className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base pr-20 bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={password}
+                onChange={e=>setPassword(e.target.value)}
+            />
+            <button
+                type="button"
+                className="absolute right-2 bottom-2 px-2 py-1 text-xs rounded border bg-gray-50 hover:bg-gray-100"
+                onClick={()=>setShowPassword(v=>!v)}
+            >{showPassword ? 'Hide' : 'Show'}</button>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-gray-700">First Name</label>
+            <input className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition" placeholder="First Name" value={firstName} onChange={e=>setFirstName(e.target.value)} />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-gray-700">Last Name</label>
+            <input className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition" placeholder="Last Name" value={lastName} onChange={e=>setLastName(e.target.value)} />
+          </div>
         </div>
-        <div className="flex flex-col gap-1 relative">
-          <label className="text-sm text-gray-700">Password</label>
-          <input
-            className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base pr-20 bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition"
-            type={showPassword ? 'text' : 'password'}
-            placeholder="••••••••"
-            value={password}
-            onChange={e=>setPassword(e.target.value)}
-          />
-          <button
-            type="button"
-            className="absolute right-2 bottom-2 px-2 py-1 text-xs rounded border bg-gray-50 hover:bg-gray-100"
-            onClick={()=>setShowPassword(v=>!v)}
-          >{showPassword ? 'Hide' : 'Show'}</button>
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-700">First Name</label>
-          <input className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition" placeholder="First Name" value={firstName} onChange={e=>setFirstName(e.target.value)} />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-700">Last Name</label>
-          <input className="border-2 border-gray-300 px-3 py-2 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-600 transition" placeholder="Last Name" value={lastName} onChange={e=>setLastName(e.target.value)} />
-        </div>
+        <button className="px-5 py-2.5 rounded bg-green-600 text-white shadow hover:bg-green-700 w-fit" onClick={onCreate}>Create</button>
       </div>
-      <button className="px-5 py-2.5 rounded bg-green-600 text-white shadow hover:bg-green-700 w-fit" onClick={onCreate}>Create</button>
-    </div>
   )
 }
 
 export default function AdminPanel({ onBack, user, onNavigate, onLogout }: { onBack: () => void; user: string; onNavigate: (v: any) => void; onLogout: () => void }) {
   const [tab, setTab] = useState<'submissions'|'reference'|'users'>('submissions')
   return (
-    <div className="min-h-screen bg-gray-50">
-      <TopNav user={user} current={"admin" as any} onNavigate={onNavigate} onLogout={onLogout} />
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex gap-3 mb-4">
-            <button className={`px-3 py-2 rounded ${tab==='submissions'?'bg-green-600 text-white':'bg-gray-100'}`} onClick={()=>setTab('submissions')}>Submissions</button>
-            <button className={`px-3 py-2 rounded ${tab==='reference'?'bg-green-600 text-white':'bg-gray-100'}`} onClick={()=>setTab('reference')}>Reference</button>
-            <button className={`px-3 py-2 rounded ${tab==='users'?'bg-green-600 text-white':'bg-gray-100'}`} onClick={()=>setTab('users')}>Users</button>
-            <div className="flex-1" />
-            <button className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700" onClick={onBack}>Back</button>
+      <div className="min-h-screen bg-gray-50">
+        <TopNav user={user} current={"admin" as any} onNavigate={onNavigate} onLogout={onLogout} />
+        <div className="container mx-auto px-4 py-8">
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex gap-3 mb-4">
+              <button className={`px-3 py-2 rounded ${tab==='submissions'?'bg-green-600 text-white':'bg-gray-100'}`} onClick={()=>setTab('submissions')}>Submissions</button>
+              <button className={`px-3 py-2 rounded ${tab==='reference'?'bg-green-600 text-white':'bg-gray-100'}`} onClick={()=>setTab('reference')}>Reference</button>
+              <button className={`px-3 py-2 rounded ${tab==='users'?'bg-green-600 text-white':'bg-gray-100'}`} onClick={()=>setTab('users')}>Reviewers</button>
+              <div className="flex-1" />
+              <button className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700" onClick={onBack}>Back</button>
+            </div>
+            {tab === 'submissions' && <AdminSubmissions />}
+            {tab === 'reference' && <AdminReference />}
+            {tab === 'users' && <AdminUsers />}
           </div>
-          {tab === 'submissions' && <AdminSubmissions />}
-          {tab === 'reference' && <AdminReference />}
-          {tab === 'users' && <AdminUsers />}
         </div>
       </div>
-    </div>
   )
 }

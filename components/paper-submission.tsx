@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react"
 import useAuthGuard from "@/hooks/useAuthGuard"
 import { getTopics, getPaperTypes } from "@/lib/reference"
-import { addCoAuthor, createPaper, submitPaper, uploadPdf } from "@/lib/papers"
+import { addCoAuthor, createPaper, uploadPdf } from "@/lib/papers"
 import TopNav from "@/components/ui/top-nav"
 
 interface CoAuthorUI {
@@ -112,9 +112,8 @@ export default function PaperSubmission({ user, onNavigate, onLogout }: PaperSub
       if (file) {
         await uploadPdf(created.id, file)
       }
-      await submitPaper(created.id) // initial submit per flow (optional)
       const coAuthorCount = coAuthors.length
-      alert(`Paper created and submitted successfully${coAuthorCount > 0 ? ` with ${coAuthorCount} co-author${coAuthorCount > 1 ? 's' : ''}` : ''}.`)
+      alert(`Paper created successfully${coAuthorCount > 0 ? ` with ${coAuthorCount > 1 ? coAuthorCount + ' co-authors' : ' 1 co-author'}` : ''}. Admin will handle submission.`)
     } catch (err) {
       alert("Create/submit failed. Check required fields and settings.")
     }
@@ -237,7 +236,7 @@ export default function PaperSubmission({ user, onNavigate, onLogout }: PaperSub
                       disabled={paperTypes.length === 0 || topics.length === 0}
                       className="bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white px-6 py-2 rounded font-medium transition-colors"
                   >
-                    Create & Submit
+                    Create
                   </button>
                 </div>
               </form>

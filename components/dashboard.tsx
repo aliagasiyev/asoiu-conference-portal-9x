@@ -49,13 +49,11 @@ export default function Dashboard({ user, onNavigate, onLogout }: DashboardProps
   }
 
   const onSubmit = async (id: number) => {
-    await submitPaper(id).catch(() => alert("Submission failed (check settings and required fields)."))
-    await load()
+    alert("You don't have permission to change status. Please contact the admin.")
   }
 
   const onSubmitCR = async (id: number) => {
-    await submitCameraReady(id).catch(() => alert("Camera-ready submission failed."))
-    await load()
+    alert("You don't have permission to change status. Please contact the admin.")
   }
 
   return (
@@ -143,20 +141,20 @@ export default function Dashboard({ user, onNavigate, onLogout }: DashboardProps
                             <td className="border border-gray-400 px-4 py-2">
                               <div className="flex flex-wrap gap-2">
                                 <button
-                                  className="px-2 py-1 rounded text-xs font-medium bg-green-50 text-green-700 border border-green-200 hover:bg-green-100"
+                                  className="px-2 py-1 rounded text-xs font-medium bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed"
                                   onClick={() => onSubmit(p.id)}
                                 >
                                   Submit
                                 </button>
                                 <button
-                                  className="px-2 py-1 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100"
+                                  className="px-2 py-1 rounded text-xs font-medium bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed"
                                   onClick={() => onSubmitCR(p.id)}
                                 >
                                   Submit CR
                                 </button>
                                 <button
-                                  className="px-2 py-1 rounded text-xs font-medium bg-orange-50 text-orange-700 border border-orange-200 hover:bg-orange-100"
-                                  onClick={() => onWithdraw(p.id)}
+                                  className="px-2 py-1 rounded text-xs font-medium bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed"
+                                  onClick={() => alert("You don't have permission to change status. Please contact the admin.")}
                                 >
                                   Withdraw
                                 </button>
