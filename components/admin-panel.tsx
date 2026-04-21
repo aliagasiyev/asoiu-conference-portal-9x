@@ -52,16 +52,25 @@ function AdminSubmissions() {
   }
 
   const onAssign = async (id: number) => {
-    if (!assignForm.reviewerEmail || !assignForm.dueAt) return alert('Reviewer Gmail and DueAt required')
+    if (!assignForm.reviewerEmail || !assignForm.dueAt)
+      return alert('Reviewer Gmail and DueAt required')
+
     try {
       await adminAssignReviewer(id, assignForm.reviewerEmail, assignForm.dueAt)
-      alert('Assigned successfully')
+
+      alert("Reviewer assigned successfully")
+
+      await load()
+
     } catch (e: any) {
-      const msg = e?.response?.data?.message || 'Failed to assign reviewer. Ensure Gmail exists and is a reviewer.'
-      alert(msg)
+      alert(
+        e?.response?.data?.message ||
+        e?.message ||
+        "Assignment failed"
+      )
     }
+
     setAssignForm({ reviewerEmail: '', dueAt: '' })
-    await load()
   }
 
   const onDecision = async (id: number) => {
