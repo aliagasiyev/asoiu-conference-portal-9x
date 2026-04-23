@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-    // Prefer explicit NEXT_PUBLIC_API_URL; fallback to API_PROXY_TARGET used locally; else default to backend localhost
-    baseURL: process.env.NEXT_PUBLIC_API_URL || process.env.API_PROXY_TARGET || 'http://localhost:8083',
+    // If NEXT_PUBLIC_API_URL is provided, hit it directly.
+    // Otherwise, fallback to '' (relative), allowing Nginx or Next.js to proxy the request.
+    baseURL: process.env.NEXT_PUBLIC_API_URL || '',
 });
 
 api.interceptors.request.use((config) => {
@@ -11,4 +12,19 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-export default api
+// Automatically log out user if token is expired or invalid
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('asiou_jwt');
+                localStorage.removeItem('asiou_user_email');
+                window.location.reload(); // Force app to remount into 'login' state
+            }
+        }
+        return Promise.reject(error);
+    }
+);
+
+export default api;

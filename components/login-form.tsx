@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 import { login } from "@/lib/auth"
- 
+
 
 type Props = { onLogin: (email: string) => void; onGoRegister?: () => void }
 
@@ -29,7 +29,7 @@ export default function LoginForm({ onLogin, onGoRegister }: Props) {
           const candidate = (payload.firstName && payload.lastName) ? `${payload.firstName} ${payload.lastName}` : (payload.given_name && payload.family_name) ? `${payload.given_name} ${payload.family_name}` : (payload.name || '')
           if (candidate) localStorage.setItem('asiou_user_name', candidate)
         }
-      } catch {}
+      } catch { }
       onLogin(email) // switch SPA view instead of router.push
     } catch (err: any) {
       setError(err?.message || "Login failed")
