@@ -32,7 +32,29 @@ export default function LoginForm({ onLogin, onGoRegister }: Props) {
       } catch { }
       onLogin(email) // switch SPA view instead of router.push
     } catch (err: any) {
-      setError(err?.message || "Login failed")
+      // Handle error response from backend - show user-friendly message
+      let errorMessage = "Login failed. Please try again."
+      
+      if (err.response) {
+        // Server responded with error status (4xx, 5xx)
+        const status = err.response.status
+        const responseData = err.response.data
+        
+        if (status === 401) {
+          // Bad credentials or similar auth failure
+          errorMessage = "Email or password is incorrect"
+        } else if (status === 400 && responseData?.message) {
+          // Bad request - use backend message if available
+          errorMessage = responseData.message
+        } else if (status >= 500) {
+          errorMessage = "Server error. Please try again later."
+        }
+      } else if (err.request) {
+        // Network error - no response received
+        errorMessage = "Unable to connect to server. Please check your connection."
+      }
+      
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -89,8 +111,8 @@ export default function LoginForm({ onLogin, onGoRegister }: Props) {
             {loading ? "Logging in..." : "Login"}
           </button>
           {onGoRegister && (
-            <button type="button" onClick={onGoRegister} className="fancy-link w-full text-center text-sm">
-              <span>Create new account</span>
+            <button type="button" onClick={onGoRegister} className="w-full text-center text-sm text-teal-600 hover:text-teal-700 underline underline-offset-4 decoration-teal-400 hover:decoration-teal-600 transition-colors">
+              Create new account
             </button>
           )}
         </form>
@@ -128,22 +150,6 @@ export default function LoginForm({ onLogin, onGoRegister }: Props) {
         @keyframes pulseGlow {
           0% { opacity: .6; transform: translate(-50%, -50%) scale(.8); }
           100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
-        }
-        .fancy-link span {
-          background: linear-gradient(90deg, #60a5fa, #14b8a6);
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          font-weight: 600;
-          letter-spacing: .2px;
-          text-decoration: underline;
-          text-underline-offset: 4px;
-          text-decoration-color: rgba(20,184,166,.35);
-          transition: text-decoration-color .2s ease, filter .2s ease;
-        }
-        .fancy-link:hover span {
-          text-decoration-color: rgba(20,184,166,.8);
-          filter: drop-shadow(0 2px 6px rgba(59,130,246,.35));
         }
       `}</style>
     </div>

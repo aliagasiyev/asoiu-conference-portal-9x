@@ -17,7 +17,11 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response && error.response.status === 401) {
-            if (typeof window !== 'undefined') {
+            // Only auto-logout if this is NOT a login attempt
+            // Login failures should be handled by the calling component
+            const isLoginRequest = error.config?.url?.includes('/auth/login');
+            
+            if (!isLoginRequest && typeof window !== 'undefined') {
                 localStorage.removeItem('asiou_jwt');
                 localStorage.removeItem('asiou_user_email');
                 window.location.reload(); // Force app to remount into 'login' state

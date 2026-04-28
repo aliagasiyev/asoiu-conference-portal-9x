@@ -1,10 +1,33 @@
 "use client"
 
-import { useState } from "react"
-import { Eye, EyeOff } from "lucide-react"
+import { useState, useMemo } from "react"
+import { Eye, EyeOff, Check, X } from "lucide-react"
 import { register } from "@/lib/auth"
 
 type Props = { onRegistered: (email: string) => void; onBackToLogin: () => void }
+
+// Password validation rules
+const passwordRules = [
+  { id: 'length', label: 'At least 8 characters', test: (p: string) => p.length >= 8 },
+  { id: 'uppercase', label: 'At least 1 uppercase letter', test: (p: string) => /[A-Z]/.test(p) },
+  { id: 'lowercase', label: 'At least 1 lowercase letter', test: (p: string) => /[a-z]/.test(p) },
+  { id: 'digit', label: 'At least 1 digit', test: (p: string) => /[0-9]/.test(p) },
+  { id: 'special', label: 'At least 1 special character (@#$%^&+=)', test: (p: string) => /[@#$%^&+=]/.test(p) },
+  { id: 'whitespace', label: 'No whitespace', test: (p: string) => !/\s/.test(p) },
+]
+
+// Calculate password strength
+function getPasswordStrength(password: string): { level: 'weak' | 'medium' | 'strong'; bars: number } {
+  const passedRules = passwordRules.filter(rule => rule.test(password)).length
+  
+  // 0-2 rules: weak (1 bar = 33%)
+  // 3-4 rules: medium (2 bars = 66%)
+  // 5 rules: almost strong (2 bars = 66%)
+  // 6 rules: strong (3 bars = 100%)
+  if (passedRules <= 2) return { level: 'weak', bars: 1 }
+  if (passedRules < 6) return { level: 'medium', bars: 2 }
+  return { level: 'strong', bars: 3 }
+}
 
 export default function RegisterForm({ onRegistered, onBackToLogin }: Props) {
   const [firstName, setFirstName] = useState("")
@@ -17,17 +40,38 @@ export default function RegisterForm({ onRegistered, onBackToLogin }: Props) {
   const [showPwd, setShowPwd] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
 
+  // Real-time validation results
+  const passwordValidation = useMemo(() => {
+    return passwordRules.map(rule => ({
+      ...rule,
+      passed: rule.test(password)
+    }))
+  }, [password])
+
+  const passwordStrength = useMemo(() => getPasswordStrength(password), [password])
+  
+  const passwordValid = passwordValidation.every(r => r.passed)
+  const confirmValid = confirm === "" || confirm === password
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    
     if (!firstName || !lastName || !email || !password) {
       setError("Please fill in all required fields.")
       return
     }
+    
+    if (!passwordValid) {
+      setError("Password must contain at least one digit, one lowercase, one uppercase, one special character, and no whitespace")
+      return
+    }
+    
     if (password !== confirm) {
       setError("Passwords do not match.")
       return
     }
+    
     setLoading(true)
     try {
       await register({ email, password, firstName, lastName })
@@ -38,6 +82,14 @@ export default function RegisterForm({ onRegistered, onBackToLogin }: Props) {
       setError(err?.response?.data?.message || err?.message || "Registration failed")
     } finally {
       setLoading(false)
+    }
+  }
+
+  const getStrengthColor = (level: 'weak' | 'medium' | 'strong') => {
+    switch (level) {
+      case 'weak': return 'bg-red-500'
+      case 'medium': return 'bg-yellow-500'
+      case 'strong': return 'bg-green-500'
     }
   }
 
@@ -85,7 +137,7 @@ export default function RegisterForm({ onRegistered, onBackToLogin }: Props) {
                 type={showPwd ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pr-12 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full pr-12 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${!passwordValid && password.length > 0 ? 'border-red-500' : 'border-gray-300'}`}
                 required
               />
               <button
@@ -98,6 +150,25 @@ export default function RegisterForm({ onRegistered, onBackToLogin }: Props) {
                 {showPwd ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
+            {/* Password requirements */}
+            {password.length > 0 && (
+              <div className="mt-2 space-y-1">
+                <div className="flex gap-1 mb-1">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className={`h-1 flex-1 rounded ${i <= passwordStrength.bars ? getStrengthColor(passwordStrength.level) : 'bg-gray-200'}`} />
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 capitalize">Password: {passwordStrength.level}</p>
+                <ul className="space-y-0.5">
+                  {passwordValidation.map(rule => (
+                    <li key={rule.id} className={`text-xs flex items-center gap-1 ${rule.passed ? 'text-green-600' : 'text-gray-500'}`}>
+                      {rule.passed ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
+                      {rule.label}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Confirm password</label>
@@ -106,7 +177,7 @@ export default function RegisterForm({ onRegistered, onBackToLogin }: Props) {
                 type={showConfirm ? "text" : "password"}
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
-                className="w-full pr-12 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full pr-12 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${!confirmValid && confirm.length > 0 ? 'border-red-500' : 'border-gray-300'}`}
                 required
               />
               <button
@@ -119,6 +190,12 @@ export default function RegisterForm({ onRegistered, onBackToLogin }: Props) {
                 {showConfirm ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
+            {/* Confirm password validation */}
+            {confirm.length > 0 && (
+              <p className={`text-xs mt-1 ${confirmValid ? 'text-green-600' : 'text-red-600'}`}>
+                {confirmValid ? 'Passwords match' : 'Passwords do not match'}
+              </p>
+            )}
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <button
